@@ -15,6 +15,12 @@ enum DiscountCategory {
 
 public class PaymentProcessor {
     private final double INSURED_MULTIPLIER = 0.85;
+    private final double DIAGNOSIS_BASE_COST = 60.0;
+    private final double XRAY_BASE_COST = 150.0;
+    private final double BLOOD_TEST_BASE_COST = 78.0;
+    private final double ECG_BASE_COST = 200.4;
+    private final double VACCINATION_BASE_COST = 27.5;
+    private final double VACCINE_COST = 15.0;
 
     PaymentProcessor() {}
 
@@ -41,7 +47,7 @@ public class PaymentProcessor {
 
     private double costForDiagnosis(DiscountCategory discount) throws Exception {
         try {
-            return 60.0 * multiplierForDiscount(discount);
+            return DIAGNOSIS_BASE_COST * multiplierForDiscount(discount);
         }
         catch (Exception e) {
             throw e;
@@ -50,7 +56,7 @@ public class PaymentProcessor {
 
     private double costForXray(DiscountCategory discount) throws Exception {
         try {
-            return 150.0 * multiplierForDiscount(discount);
+            return XRAY_BASE_COST * multiplierForDiscount(discount);
         }
         catch (Exception e) {
             throw e;
@@ -60,10 +66,10 @@ public class PaymentProcessor {
     private double costForBloodTest(DiscountCategory discount, boolean insured) throws Exception {
         try {
             if (insured) {
-                return (78.0 * multiplierForDiscount(discount)) * INSURED_MULTIPLIER;
+                return (BLOOD_TEST_BASE_COST * multiplierForDiscount(discount)) * INSURED_MULTIPLIER;
             }
             else {
-                return 78.0 * multiplierForDiscount(discount);
+                return BLOOD_TEST_BASE_COST * multiplierForDiscount(discount);
             }
         }
         catch (Exception e) {
@@ -72,7 +78,7 @@ public class PaymentProcessor {
     }
 
     private double costForEcg(DiscountCategory discount) throws Exception {
-        return 200.4 * multiplierForDiscount(discount);
+        return ECG_BASE_COST * multiplierForDiscount(discount);
     }
 
     private double costForVaccination(DiscountCategory discount, int numVaccinations) throws Exception {
@@ -80,7 +86,7 @@ public class PaymentProcessor {
             throw new NoVaccineException("Invalid number of vaccinations: " + numVaccinations);
         }
         else {
-            return (27.5 + (15.0 * numVaccinations)) * multiplierForDiscount(discount);
+            return (VACCINATION_BASE_COST + (VACCINE_COST * numVaccinations)) * multiplierForDiscount(discount);
         }
     }
 
