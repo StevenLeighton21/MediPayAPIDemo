@@ -21,7 +21,7 @@ public class DemoMain {
             }
             try {
                 System.out.println("The cost of the service is: "
-                        + paymentProcessor.costForService(service, discount, insured, numVaccines));
+                        + paymentProcessor.costForService(service, discount, insured, numVaccines)/100);
             }
             catch (Exception e) {
                 System.out.println("Something went wrong generating the cost from the arguments given.");

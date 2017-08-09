@@ -14,17 +14,20 @@ enum DiscountCategory {
 }
 
 public class PaymentProcessor {
-    private final double INSURED_MULTIPLIER = 0.85;
-    private final double DIAGNOSIS_BASE_COST = 60.0;
-    private final double XRAY_BASE_COST = 150.0;
-    private final double BLOOD_TEST_BASE_COST = 78.0;
-    private final double ECG_BASE_COST = 200.4;
-    private final double VACCINATION_BASE_COST = 27.5;
-    private final double VACCINE_COST = 15.0;
+    /*
+    Monetary values are considered to be in any base10 currency, counting cents
+     */
+    public final static double INSURED_MULTIPLIER = 0.85;
+    public final static int DIAGNOSIS_BASE_COST =  6000;
+    public final static int XRAY_BASE_COST = 15000;
+    public final static int BLOOD_TEST_BASE_COST = 7800;
+    public final static int ECG_BASE_COST = 20040;
+    public final static int VACCINATION_BASE_COST = 2750;
+    public final static int VACCINE_COST = 1500;
 
     PaymentProcessor() {}
 
-    public double costForService(Service service, DiscountCategory discount, boolean insured, int numVaccinations) throws Exception {
+    public int costForService(Service service, DiscountCategory discount, boolean insured, int numVaccinations) throws Exception {
         switch (service) {
             case DIAGNOSIS:
                 return costForDiagnosis(discount);
@@ -41,35 +44,35 @@ public class PaymentProcessor {
         }
     }
 
-    public double costForService(Service service, DiscountCategory discount, boolean insured) throws Exception {
+    public int costForService(Service service, DiscountCategory discount, boolean insured) throws Exception {
         return costForService(service, discount, insured, 0);
     }
 
-    private double costForDiagnosis(DiscountCategory discount) throws Exception {
+    private int costForDiagnosis(DiscountCategory discount) throws Exception {
         try {
-            return DIAGNOSIS_BASE_COST * multiplierForDiscount(discount);
+            return (int) Math.round(DIAGNOSIS_BASE_COST * multiplierForDiscount(discount));
         }
         catch (Exception e) {
             throw e;
         }
     }
 
-    private double costForXray(DiscountCategory discount) throws Exception {
+    private int costForXray(DiscountCategory discount) throws Exception {
         try {
-            return XRAY_BASE_COST * multiplierForDiscount(discount);
+            return (int) Math.round(XRAY_BASE_COST * multiplierForDiscount(discount));
         }
         catch (Exception e) {
             throw e;
         }
     }
 
-    private double costForBloodTest(DiscountCategory discount, boolean insured) throws Exception {
+    private int costForBloodTest(DiscountCategory discount, boolean insured) throws Exception {
         try {
             if (insured) {
-                return (BLOOD_TEST_BASE_COST * multiplierForDiscount(discount)) * INSURED_MULTIPLIER;
+                return (int) Math.round((BLOOD_TEST_BASE_COST * multiplierForDiscount(discount)) * INSURED_MULTIPLIER);
             }
             else {
-                return BLOOD_TEST_BASE_COST * multiplierForDiscount(discount);
+                return (int) Math.round((BLOOD_TEST_BASE_COST * multiplierForDiscount(discount)));
             }
         }
         catch (Exception e) {
@@ -77,16 +80,16 @@ public class PaymentProcessor {
         }
     }
 
-    private double costForEcg(DiscountCategory discount) throws Exception {
-        return ECG_BASE_COST * multiplierForDiscount(discount);
+    private int costForEcg(DiscountCategory discount) throws Exception {
+        return (int) Math.round(ECG_BASE_COST * multiplierForDiscount(discount));
     }
 
-    private double costForVaccination(DiscountCategory discount, int numVaccinations) throws Exception {
+    private int costForVaccination(DiscountCategory discount, int numVaccinations) throws Exception {
         if(numVaccinations < 1) {
             throw new NoVaccineException("Invalid number of vaccinations: " + numVaccinations);
         }
         else {
-            return (VACCINATION_BASE_COST + (VACCINE_COST * numVaccinations)) * multiplierForDiscount(discount);
+            return (int) Math.round((VACCINATION_BASE_COST + (VACCINE_COST * numVaccinations)) * multiplierForDiscount(discount));
         }
     }
 
